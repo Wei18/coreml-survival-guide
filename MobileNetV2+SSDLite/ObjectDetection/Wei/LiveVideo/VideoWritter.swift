@@ -12,7 +12,14 @@ import UIKit
 
 class VideoWritter {
     
+    enum State {
+        case idle
+        case active
+    }
+    
     struct Config {
+        
+        var state: State = .idle
         
         static let fileExtension: String = ".mp4"
         
@@ -39,22 +46,55 @@ class VideoWritter {
         /// The name is represented to the name of idle file.
         var currentIdleName: String?
         
+        var atSourceTime: CMTime?
+        
     }
+    
+    // MARK: Properties
     
     private var config = Config()
     private var activeTimer: Timer?
     private var idleTimer: Timer?
+    private var assetWriter: AVAssetWriter!
+    private lazy var assetWriterInput: AVAssetWriterInput = {
+        let assetWriterInput = AVAssetWriterInput(mediaType: .video, outputSettings: [
+            AVVideoCodecKey : AVVideoCodecType.h264,
+            AVVideoWidthKey : 720,
+            AVVideoHeightKey : 1280,
+            AVVideoCompressionPropertiesKey : [
+                AVVideoAverageBitRateKey : 2300000,
+            ],
+        ])
+        assetWriterInput.expectsMediaDataInRealTime = true
+        return assetWriterInput
+    }()
+    
+    // MARK: Functions
     
     private func startRecord(with filename: String, fileExtension: String = Config.fileExtension) {
-        ZWLogger.log()
-        guard var fileUrl = self.config.fileUrl else { return }
+        guard var fileUrl = self.config.fileUrl else {
+            ZWLogger.report(NSError())
+            return
+        }
         fileUrl.appendPathComponent(filename + fileExtension)
-        //movieOutput.startRecording(to: fileUrl, recordingDelegate: self)
+        guard let assetWriter = try? AVAssetWriter(outputURL: fileUrl, fileType: .mp4) else {
+            ZWLogger.report(NSError())
+            return
+        }
+        ZWLogger.log()
+        self.assetWriter = assetWriter
+        if assetWriter.canAdd(assetWriterInput) {
+            assetWriter.add(assetWriterInput)
+        }
+        assetWriter.startWriting()
     }
     
     private func stopRecord() {
         ZWLogger.log()
-        //movieOutput.stopRecording()
+        assetWriterInput.markAsFinished()
+        assetWriter?.finishWriting { [weak self] in
+            self?.config.atSourceTime = nil
+        }
     }
     
     /// Once one or more persons are detected.
@@ -62,9 +102,11 @@ class VideoWritter {
     /// The app should start record video and save it into another seconds duration video file
     /// Seconds is according to config.activeDuration, and the file extension as onfig.fileExtension.
     func saveFileWhenDetected(ids: [String]) {
-        ZWLogger.log(ids)
-        
+        #warning("how to get unique id?")
         let newValues = Set(ids).subtracting(config.activeNames)
+        guard !newValues.isEmpty else { return }
+        config.state = .active
+        ZWLogger.log(ids)
         let deferValues = config.activeNames.subtracting(newValues)
         
         for i in newValues.indices {
@@ -84,6 +126,9 @@ class VideoWritter {
     ///
     /// If no more person detected after the time of last detected video frame over than seconds according to config.idleDuration.
     func saveFileWhenIdle() {
+        guard config.state == .active else { return }
+        config.state = .idle
+        
         ZWLogger.log()
         
         idleTimer?.invalidate()
@@ -112,16 +157,14 @@ class VideoWritter {
         try? FileManager.default.removeItem(at: fileUrl)
     }
     
+    func append(_ sampleBuffer: CMSampleBuffer) {
+        guard assetWriterInput.isReadyForMoreMediaData else { return }
+        if config.atSourceTime == nil {
+            let sourceTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+            config.atSourceTime = sourceTime
+            assetWriter.startSession(atSourceTime: sourceTime)
+        }
+        assetWriterInput.append(sampleBuffer)
+    }
+    
 }
-//
-//extension VideoRecorder: AVCaptureFileOutputRecordingDelegate {
-//
-//    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-//        if let error = error {
-//            ZWLogger.report(error)
-//        } else {
-//            UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, nil, nil, nil)
-//        }
-//    }
-//
-//}
