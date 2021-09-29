@@ -24,6 +24,7 @@ class PreviewVideoViewController: ZWLogViewController {
         super.viewDidLoad()
         setUpBoundingBoxViews()
         setUpViewModel()
+        setUpPhotoLibrary()
     }
     
     // MARK: Functions
@@ -36,6 +37,12 @@ class PreviewVideoViewController: ZWLogViewController {
     private func setUpBoundingBoxViews() {
         boundingBoxViews = (0..<viewModel.maxBoundingBoxViews).map { _ in BoundingBoxView() }
         boundingBoxViews.forEach { box in box.addToLayer(self.videoPreview.layer) }
+    }
+    
+    private func setUpPhotoLibrary() {
+        #warning("todo")
+        // present photo library and return video as parameter into
+        //viewModel.setVideo()
     }
     
 }

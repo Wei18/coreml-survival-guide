@@ -20,6 +20,7 @@
 		DB3324BC270400D6000A89FD /* PreviewVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3324BB270400D6000A89FD /* PreviewVideoViewModel.swift */; };
 		DB3324C0270444B5000A89FD /* LiveVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3324BF270444B5000A89FD /* LiveVideoViewController.swift */; };
 		DB3324C2270448B3000A89FD /* LiveVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3324C1270448B3000A89FD /* LiveVideoViewModel.swift */; };
+		DB3324C92704B29B000A89FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DB3324CB2704B29B000A89FD /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		DB3324BB270400D6000A89FD /* PreviewVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewVideoViewModel.swift; sourceTree = "<group>"; };
 		DB3324BF270444B5000A89FD /* LiveVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoViewController.swift; sourceTree = "<group>"; };
 		DB3324C1270448B3000A89FD /* LiveVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoViewModel.swift; sourceTree = "<group>"; };
+		DB3324CA2704B29B000A89FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 				7BCB412F21C309B900BFC4D0 /* VideoCapture.swift */,
 				7BCB413821C55F9B00BFC4D0 /* MobileNetV2_SSDLite.mlmodel */,
 				7BCB412121C3096200BFC4D0 /* Assets.xcassets */,
+				DB3324CB2704B29B000A89FD /* InfoPlist.strings */,
 				7BCB412621C3096200BFC4D0 /* Info.plist */,
 				7BCB412321C3096200BFC4D0 /* LaunchScreen.storyboard */,
 				7BCB411E21C3096100BFC4D0 /* Main.storyboard */,
@@ -174,6 +177,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7BCB412521C3096200BFC4D0 /* LaunchScreen.storyboard in Resources */,
+				DB3324C92704B29B000A89FD /* InfoPlist.strings in Resources */,
 				7BCB412221C3096200BFC4D0 /* Assets.xcassets in Resources */,
 				7BCB412021C3096100BFC4D0 /* Main.storyboard in Resources */,
 			);
@@ -216,6 +220,14 @@
 				7BCB412421C3096200BFC4D0 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		DB3324CB2704B29B000A89FD /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DB3324CA2704B29B000A89FD /* en */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

@@ -9,4 +9,4 @@ Using the iOS sample application of Object Detection sample[1] and extend it wit
 
 ### OPTIONAL
 [v] 1. Draw bounding boxes at recorded video frame
-[v] 2. Stop video recording automatically if no more person detected after the time of last detected video frame over than 5 seconds
+[x] 2. Stop video recording automatically if no more person detected after the time of last detected video frame over than 5 seconds

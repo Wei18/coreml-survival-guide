@@ -76,7 +76,6 @@ class PreviewVideoViewModel {
         
     }
     
-#warning("todo")
     private func predict(sampleBuffer: CMSampleBuffer) {
         guard
             currentBuffer == nil,
@@ -112,14 +111,9 @@ class PreviewVideoViewModel {
         }
     }
     
+    func setVideo() {
+        // play thte video and parsing as sampleBuffer
+        //viewModel.predict(sampleBuffer: sampleBuffer)
+    }
+    
 }
-
-#warning("Extract the video frame (CVPixelBuffer) from video file and using it for object detection inference[2]")
-//extension PreviewVideoViewController: VideoCaptureDelegate {
-//    func videoCapture(_ capture: VideoCapture, didCaptureVideoFrame sampleBuffer: CMSampleBuffer) {
-//        viewModel.predict(sampleBuffer: sampleBuffer)
-//    }
-//}
-
-#warning("Able to load a video file (.mp4 with person in content)")
-//
