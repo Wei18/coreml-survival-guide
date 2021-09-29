@@ -15,6 +15,11 @@
 		7BCB413221C309B900BFC4D0 /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCB412E21C309B900BFC4D0 /* BoundingBoxView.swift */; };
 		7BCB413321C309B900BFC4D0 /* VideoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCB412F21C309B900BFC4D0 /* VideoCapture.swift */; };
 		7BCB413921C55F9B00BFC4D0 /* MobileNetV2_SSDLite.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 7BCB413821C55F9B00BFC4D0 /* MobileNetV2_SSDLite.mlmodel */; };
+		DB3324B42702B8CA000A89FD /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3324B32702B8CA000A89FD /* Logger.swift */; };
+		DB3324B72703EA78000A89FD /* VideoRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3324B62703EA78000A89FD /* VideoRecorder.swift */; };
+		DB3324BA2703FB67000A89FD /* PreviewVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3324B92703FB67000A89FD /* PreviewVideoViewController.swift */; };
+		DB3324BC270400D6000A89FD /* PreviewVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3324BB270400D6000A89FD /* PreviewVideoViewModel.swift */; };
+		DB3324BE2704051D000A89FD /* ViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3324BD2704051D000A89FD /* ViewController+Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +33,12 @@
 		7BCB412E21C309B900BFC4D0 /* BoundingBoxView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
 		7BCB412F21C309B900BFC4D0 /* VideoCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCapture.swift; sourceTree = "<group>"; };
 		7BCB413821C55F9B00BFC4D0 /* MobileNetV2_SSDLite.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MobileNetV2_SSDLite.mlmodel; sourceTree = "<group>"; };
+		DB3324B32702B8CA000A89FD /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		DB3324B52702B8E3000A89FD /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		DB3324B62703EA78000A89FD /* VideoRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecorder.swift; sourceTree = "<group>"; };
+		DB3324B92703FB67000A89FD /* PreviewVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewVideoViewController.swift; sourceTree = "<group>"; };
+		DB3324BB270400D6000A89FD /* PreviewVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewVideoViewModel.swift; sourceTree = "<group>"; };
+		DB3324BD2704051D000A89FD /* ViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +55,7 @@
 		7BCB410E21C3096100BFC4D0 = {
 			isa = PBXGroup;
 			children = (
+				DB3324B22702B8BF000A89FD /* Wei */,
 				7BCB411921C3096100BFC4D0 /* ObjectDetection */,
 				7BCB411821C3096100BFC4D0 /* Products */,
 			);
@@ -71,6 +83,19 @@
 				7BCB411E21C3096100BFC4D0 /* Main.storyboard */,
 			);
 			path = ObjectDetection;
+			sourceTree = "<group>";
+		};
+		DB3324B22702B8BF000A89FD /* Wei */ = {
+			isa = PBXGroup;
+			children = (
+				DB3324B32702B8CA000A89FD /* Logger.swift */,
+				DB3324B52702B8E3000A89FD /* README.md */,
+				DB3324B92703FB67000A89FD /* PreviewVideoViewController.swift */,
+				DB3324BB270400D6000A89FD /* PreviewVideoViewModel.swift */,
+				DB3324B62703EA78000A89FD /* VideoRecorder.swift */,
+				DB3324BD2704051D000A89FD /* ViewController+Ext.swift */,
+			);
+			path = Wei;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -146,10 +171,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				7BCB411D21C3096100BFC4D0 /* ViewController.swift in Sources */,
+				DB3324B42702B8CA000A89FD /* Logger.swift in Sources */,
 				7BCB413221C309B900BFC4D0 /* BoundingBoxView.swift in Sources */,
 				7BCB413921C55F9B00BFC4D0 /* MobileNetV2_SSDLite.mlmodel in Sources */,
+				DB3324BE2704051D000A89FD /* ViewController+Ext.swift in Sources */,
 				7BCB411B21C3096100BFC4D0 /* AppDelegate.swift in Sources */,
+				DB3324B72703EA78000A89FD /* VideoRecorder.swift in Sources */,
+				DB3324BA2703FB67000A89FD /* PreviewVideoViewController.swift in Sources */,
 				7BCB413321C309B900BFC4D0 /* VideoCapture.swift in Sources */,
+				DB3324BC270400D6000A89FD /* PreviewVideoViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
