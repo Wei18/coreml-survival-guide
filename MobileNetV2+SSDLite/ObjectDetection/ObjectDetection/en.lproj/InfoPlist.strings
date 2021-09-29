@@ -1,2 +1,2 @@
 NSPhotoLibraryAddUsageDescription = "Add Photo is required to save the photo to your device.";
-
+NSPhotoLibraryUsageDescription = "Use Media is required to preview the video on App.";

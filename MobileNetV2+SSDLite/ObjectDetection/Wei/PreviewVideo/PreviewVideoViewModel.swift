@@ -12,6 +12,7 @@ import CoreMedia
 import CoreML
 import Vision
 import AVFoundation
+import Photos
 
 protocol VideoViewModelDelegate: AnyObject {
     func show(predictions: [VNRecognizedObjectObservation])
@@ -110,11 +111,15 @@ class PreviewVideoViewModel {
         }
     }
     
-    func setVideoUrl(_ url: URL) {
-        let asset = AVAsset(url: url)
-        videoReader.delegate = self
-        videoReader.read(asset: asset)
-        videoReader.repeatedlyDispalyBuffer()
+    func setVideo(_ phAsset: PHAsset?) {
+        guard let asset = phAsset else { return }
+        self.videoReader.delegate = self
+        PHImageManager.default().requestAVAsset(forVideo: asset, options: nil) { [weak self] (asset, _, _) in
+            guard let self = self, let asset = asset else { return }
+            self.videoReader.read(asset: asset)
+            self.videoReader.repeatedlyDispalyBuffer()
+        }
+        
     }
     
 }

@@ -28,7 +28,8 @@ class ZWLogger {
         file: @autoclosure (() -> String) = #file,
         line: @autoclosure (() -> Int) = #line) {
             // Firebase Crashlytics
-            ZWLogger.log([e], file: file(), line: line())
+            let text = e.localizedDescription
+            ZWLogger.log([text], file: file(), line: line())
     }
 }
 

@@ -70,17 +70,10 @@ class PreviewVideoViewController: ZWLogViewController {
 extension PreviewVideoViewController: VideoViewModelDelegate, PHPickerViewControllerDelegate {
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        guard let itemProvider = results.first?.itemProvider else { return }
-        itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.mpeg4Movie.identifier) { [weak self] url, error in
-            if let error = error {
-                ZWLogger.report(error)
-            } else if let url = url {
-                self?.viewModel.setVideoUrl(url)
-            }
-            DispatchQueue.main.async {
-                picker.dismiss(animated: true, completion: nil)
-            }
-        }
+        picker.dismiss(animated: true, completion: nil)
+        let identifiers = results.compactMap(\.assetIdentifier)
+        let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers, options: nil)
+        viewModel.setVideo(fetchResult.firstObject)
     }
     
     func show(predictions: [VNRecognizedObjectObservation]) {
