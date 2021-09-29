@@ -1,5 +1,5 @@
 //
-//  VideoRecorder.swift
+//  VideoWritter.swift
 //  ObjectDetection
 //
 //  Created by zwc on 2021/9/29.
@@ -10,10 +10,12 @@ import Foundation
 import AVFoundation
 import UIKit
 
-class VideoRecorder: VideoCapture {
-
+class VideoWritter {
+    
     struct Config {
+        
         static let fileExtension: String = ".mp4"
+        
         var dateName: String { Date().timeIntervalSince1970.description }
         
         lazy var fileUrl: URL? = {
@@ -25,10 +27,15 @@ class VideoRecorder: VideoCapture {
             return fileUrl
         }()
         
+        /// The duration of one or more person detected.
         var activeDuration: TimeInterval = 10
+        
+        /// The names are used to start new video file.
         var activeNames: Set<String> = []
         
+        /// The duration of no more person detected.
         var idleDuration: TimeInterval = 5
+        
         /// The name is represented to the name of idle file.
         var currentIdleName: String?
         
@@ -37,27 +44,21 @@ class VideoRecorder: VideoCapture {
     private var config = Config()
     private var activeTimer: Timer?
     private var idleTimer: Timer?
-    private let movieOutput = AVCaptureMovieFileOutput()
     
-    override func setUpCamera(sessionPreset: AVCaptureSession.Preset) -> Bool {
-        let result = super.setUpCamera(sessionPreset: sessionPreset)
-        if captureSession.canAddOutput(movieOutput) {
-          captureSession.addOutput(movieOutput)
-        }
-        return result
-    }
-
     private func startRecord(with filename: String, fileExtension: String = Config.fileExtension) {
         guard var fileUrl = self.config.fileUrl else { return }
         fileUrl.appendPathComponent(filename + fileExtension)
-        movieOutput.startRecording(to: fileUrl, recordingDelegate: self)
+        //movieOutput.startRecording(to: fileUrl, recordingDelegate: self)
     }
     
     private func stopRecord() {
-        movieOutput.stopRecording()
+        //movieOutput.stopRecording()
     }
     
-    /// Once one or more persons are detected, the app should start record video and save it into another 10 seconds duration video file (.mp4)
+    /// Once one or more persons are detected.
+    ///
+    /// The app should start record video and save it into another seconds duration video file
+    /// Seconds is according to config.activeDuration, and the file extension as onfig.fileExtension.
     func saveFileWhenDetected(ids: [String]) {
         let newValues = Set(ids).subtracting(config.activeNames)
         let deferValues = config.activeNames.subtracting(newValues)
@@ -75,7 +76,9 @@ class VideoRecorder: VideoCapture {
         
     }
     
-    /// Stop video recording automatically if no more person detected after the time of last detected video frame over than 5 seconds
+    /// Stop video recording automatically
+    ///
+    /// If no more person detected after the time of last detected video frame over than seconds according to config.idleDuration.
     func saveFileWhenIdle() {
         
         idleTimer?.invalidate()
@@ -104,15 +107,15 @@ class VideoRecorder: VideoCapture {
     }
     
 }
-
-extension VideoRecorder: AVCaptureFileOutputRecordingDelegate {
-    
-    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        if let error = error {
-            ZWLogger.report(error)
-        } else {
-            UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, nil, nil, nil)
-        }
-    }
-    
-}
+//
+//extension VideoRecorder: AVCaptureFileOutputRecordingDelegate {
+//
+//    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+//        if let error = error {
+//            ZWLogger.report(error)
+//        } else {
+//            UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, nil, nil, nil)
+//        }
+//    }
+//
+//}

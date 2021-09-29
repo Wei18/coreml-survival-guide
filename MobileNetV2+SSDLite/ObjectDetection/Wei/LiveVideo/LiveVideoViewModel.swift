@@ -1,29 +1,26 @@
 //
-//  PreviewVideoViewModel.swift
+//  LiveVideoViewModel.swift
 //  ObjectDetection
 //
 //  Created by zwc on 2021/9/29.
 //  Copyright © 2021 MachineThink. All rights reserved.
 //
 
+import AVFoundation
 import Foundation
 import UIKit
 import CoreMedia
 import CoreML
 import Vision
 
-protocol PreviewVideoViewModelDelegate: AnyObject {
-    func show(predictions: [VNRecognizedObjectObservation])
-}
-
-class PreviewVideoViewModel {
-
-    weak var delegate: PreviewVideoViewModelDelegate?
+class LiveVideoViewModel {
     
+    // MARK: Properties
+    weak var delegate: VideoViewModelDelegate?
+    private(set) lazy var videoCapture = VideoCapture()
+    private(set) lazy var videoWritter = VideoWritter()
     private var currentBuffer: CVPixelBuffer?
-    
     private let coreMLModel = MobileNetV2_SSDLite()
-    
     private lazy var visionModel: VNCoreMLModel = {
         do {
             return try VNCoreMLModel(for: coreMLModel.model)
@@ -47,6 +44,8 @@ class PreviewVideoViewModel {
     let maxBoundingBoxViews = 10
     
     private(set) var colors: [String: UIColor] = [:]
+    
+    // MARK: Functions
     
     func genColors() {
         
@@ -72,7 +71,20 @@ class PreviewVideoViewModel {
         
     }
     
-    func predict(sampleBuffer: CMSampleBuffer) {
+    /// Once everything is set up, we start capturing live video.
+    func setUpCamera(completion: @escaping () -> Void) {
+        videoCapture.delegate = self
+        videoCapture.setUp(sessionPreset: .hd1280x720) { success in
+            if success {
+                completion()
+                self.videoCapture.start()
+            } else {
+                ZWLogger.report(NSError())
+            }
+        }
+    }
+    
+    private func predict(sampleBuffer: CMSampleBuffer) {
         guard
             currentBuffer == nil,
             let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
@@ -97,14 +109,39 @@ class PreviewVideoViewModel {
         
     }
     
-    func processObservations(for request: VNRequest, error: Error?) {
+    private func processObservations(for request: VNRequest, error: Error?) {
         DispatchQueue.main.async {
             if let results = request.results as? [VNRecognizedObjectObservation] {
                 self.delegate?.show(predictions: results)
+                self.handle(with: results)
             } else {
                 self.delegate?.show(predictions: [])
+                self.handle(with: [])
             }
         }
+    }
+    
+    private func handle(with predictions: [VNRecognizedObjectObservation]) {
+        
+        let personUUIDs = predictions
+            .flatMap(\.labels)
+            .filter { $0.identifier == "person" }
+            .map(\.uuid.uuidString)
+        
+        if personUUIDs.isEmpty {
+            videoWritter.saveFileWhenIdle()
+        } else {
+            videoWritter.saveFileWhenDetected(ids: personUUIDs)
+        }
+        
+    }
+    
+}
+
+extension LiveVideoViewModel: VideoCaptureDelegate {
+    
+    func videoCapture(_ capture: VideoCapture, didCaptureVideoFrame sampleBuffer: CMSampleBuffer) {
+        predict(sampleBuffer: sampleBuffer)
     }
     
 }

@@ -1,22 +1,25 @@
 //
-//  PreviewVideoViewController.swift
+//  LiveVideoViewController.swift
 //  ObjectDetection
 //
 //  Created by zwc on 2021/9/29.
 //  Copyright © 2021 MachineThink. All rights reserved.
 //
 
-import Foundation
+import CoreMedia
+import CoreML
 import UIKit
 import Vision
 
-class PreviewVideoViewController: ZWLogViewController & PreviewVideoViewModelDelegate {
+class LiveVideoViewController: ZWLogViewController {
+    
+    // MARK: Properties
     
     @IBOutlet var videoPreview: UIView!
-    
     private lazy var boundingBoxViews = [BoundingBoxView]()
+    private lazy var viewModel = LiveVideoViewModel()
     
-    private lazy var viewModel = PreviewVideoViewModel()
+    // MARK: Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,19 +27,42 @@ class PreviewVideoViewController: ZWLogViewController & PreviewVideoViewModelDel
         setUpViewModel()
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        resizePreviewLayer()
+    }
+    
+    // MARK: Functions
+    
+    private func setUpBoundingBoxViews() {
+        boundingBoxViews = (0..<viewModel.maxBoundingBoxViews).map { _ in BoundingBoxView() }
+        
+    }
+    
     private func setUpViewModel() {
         viewModel.delegate = self
         viewModel.genColors()
+        viewModel.setUpCamera(completion: {
+            
+            if let previewLayer = self.viewModel.videoCapture.previewLayer {
+                self.videoPreview.layer.addSublayer(previewLayer)
+                self.resizePreviewLayer()
+            }
+            
+            // Add the bounding box layers to the UI, on top of the video preview.
+            self.boundingBoxViews.forEach { box in box.addToLayer(self.videoPreview.layer) }
+            
+        })
+        
     }
     
-    private func setUpBoundingBoxViews() {
-        for _ in 0..<viewModel.maxBoundingBoxViews {
-            boundingBoxViews.append(BoundingBoxView())
-        }
-        for box in self.boundingBoxViews {
-            box.addToLayer(self.videoPreview.layer)
-        }
+    private func resizePreviewLayer() {
+        viewModel.videoCapture.previewLayer?.frame = videoPreview.bounds
     }
+    
+}
+
+extension LiveVideoViewController: VideoViewModelDelegate {
     
     func show(predictions: [VNRecognizedObjectObservation]) {
         for i in 0..<boundingBoxViews.count {
@@ -78,14 +104,5 @@ class PreviewVideoViewController: ZWLogViewController & PreviewVideoViewModelDel
             }
         }
     }
+    
 }
-
-#warning("Extract the video frame (CVPixelBuffer) from video file and using it for object detection inference[2]")
-//extension PreviewVideoViewController: VideoCaptureDelegate {
-//    func videoCapture(_ capture: VideoCapture, didCaptureVideoFrame sampleBuffer: CMSampleBuffer) {
-//        viewModel.predict(sampleBuffer: sampleBuffer)
-//    }
-//}
-
-#warning("Able to load a video file (.mp4 with person in content)")
-//
