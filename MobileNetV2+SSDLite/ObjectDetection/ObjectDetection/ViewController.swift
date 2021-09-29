@@ -3,11 +3,11 @@ import CoreML
 import UIKit
 import Vision
 
-class ViewController: UIViewController {
+class ViewController: ZWLogViewController {
 
   @IBOutlet var videoPreview: UIView!
 
-  var videoCapture: VideoCapture!
+  var videoCapture: VideoRecorder!
   var currentBuffer: CVPixelBuffer?
 
   let coreMLModel = MobileNetV2_SSDLite()
@@ -66,7 +66,7 @@ class ViewController: UIViewController {
   }
 
   func setUpCamera() {
-    videoCapture = VideoCapture()
+    videoCapture = VideoRecorder()
     videoCapture.delegate = self
 
     videoCapture.setUp(sessionPreset: .hd1280x720) { success in
@@ -122,17 +122,19 @@ class ViewController: UIViewController {
     DispatchQueue.main.async {
       if let results = request.results as? [VNRecognizedObjectObservation] {
         self.show(predictions: results)
+        self.handle(with: results)
       } else {
         self.show(predictions: [])
+        self.handle(with: [])
       }
     }
   }
-
+    
   func show(predictions: [VNRecognizedObjectObservation]) {
     for i in 0..<boundingBoxViews.count {
       if i < predictions.count {
         let prediction = predictions[i]
-
+          
         /*
          The predicted bounding box is in normalized image coordinates, with
          the origin in the lower-left corner.
