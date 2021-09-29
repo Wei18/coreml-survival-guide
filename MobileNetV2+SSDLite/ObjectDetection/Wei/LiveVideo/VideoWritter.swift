@@ -46,12 +46,14 @@ class VideoWritter {
     private var idleTimer: Timer?
     
     private func startRecord(with filename: String, fileExtension: String = Config.fileExtension) {
+        ZWLogger.log()
         guard var fileUrl = self.config.fileUrl else { return }
         fileUrl.appendPathComponent(filename + fileExtension)
         //movieOutput.startRecording(to: fileUrl, recordingDelegate: self)
     }
     
     private func stopRecord() {
+        ZWLogger.log()
         //movieOutput.stopRecording()
     }
     
@@ -60,6 +62,8 @@ class VideoWritter {
     /// The app should start record video and save it into another seconds duration video file
     /// Seconds is according to config.activeDuration, and the file extension as onfig.fileExtension.
     func saveFileWhenDetected(ids: [String]) {
+        ZWLogger.log(ids)
+        
         let newValues = Set(ids).subtracting(config.activeNames)
         let deferValues = config.activeNames.subtracting(newValues)
         
@@ -80,6 +84,7 @@ class VideoWritter {
     ///
     /// If no more person detected after the time of last detected video frame over than seconds according to config.idleDuration.
     func saveFileWhenIdle() {
+        ZWLogger.log()
         
         idleTimer?.invalidate()
         
@@ -101,6 +106,7 @@ class VideoWritter {
     }
     
     private func remove(with filename: String, fileExtension: String = Config.fileExtension) {
+        ZWLogger.log()
         guard var fileUrl = self.config.fileUrl else { return }
         fileUrl.appendPathComponent(filename + fileExtension)
         try? FileManager.default.removeItem(at: fileUrl)
