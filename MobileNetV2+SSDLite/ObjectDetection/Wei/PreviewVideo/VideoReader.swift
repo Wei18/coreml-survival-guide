@@ -23,27 +23,31 @@ class VideoReader {
     weak var delegate: VideoReaderDelegate?
     
     func read(asset: AVAsset) {
-        queue.async {
-            ZWLogger.log()
-            guard let assetReader = try? AVAssetReader(asset: asset) else {
-                ZWLogger.report(DebugError())
-                return
-            }
+        ZWLogger.log()
+        do {
+            let assetReader = try AVAssetReader(asset: asset)
+            
             self.assetReader?.cancelReading()
             self.assetReader = assetReader
             let output = AVAssetReaderVideoCompositionOutput(
                 videoTracks: asset.tracks(withMediaType: .video),
                 videoSettings: nil)
+            output.alwaysCopiesSampleData = false
+            output.videoComposition = AVVideoComposition(propertiesOf: asset)
             self.output = output
             assetReader.add(output)
             assetReader.startReading()
+            self.repeatedlyDispalyBuffer()
+        } catch let e {
+            ZWLogger.report(e)
         }
     }
     
-    func repeatedlyDispalyBuffer() {
-        ZWLogger.log()
+    private func repeatedlyDispalyBuffer() {
+        bufferDisplayLayer.stopRequestingMediaData()
         bufferDisplayLayer.requestMediaDataWhenReady(on: self.queue) { [weak self] in
             guard let self = self else { return }
+            ZWLogger.log()
             if self.assetReader?.status == .reading, let buffer = self.output?.copyNextSampleBuffer() {
                 self.bufferDisplayLayer.enqueue(buffer)
                 self.delegate?.videoRead(self, didReadVideoFrame: buffer)

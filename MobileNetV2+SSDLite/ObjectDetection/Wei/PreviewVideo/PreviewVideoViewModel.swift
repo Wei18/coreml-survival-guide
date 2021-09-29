@@ -111,15 +111,10 @@ class PreviewVideoViewModel {
         }
     }
     
-    func setVideo(_ phAsset: PHAsset?) {
-        guard let asset = phAsset else { return }
-        self.videoReader.delegate = self
-        PHImageManager.default().requestAVAsset(forVideo: asset, options: nil) { [weak self] (asset, _, _) in
-            guard let self = self, let asset = asset else { return }
-            self.videoReader.read(asset: asset)
-            self.videoReader.repeatedlyDispalyBuffer()
-        }
-        
+    func setVideoUrl(_ url: URL) {
+        ZWLogger.log([url])
+        let asset = AVURLAsset(url: url)
+        self.videoReader.read(asset: asset)
     }
     
 }
