@@ -124,10 +124,12 @@ class LiveVideoViewModel {
     private func handle(with predictions: [VNRecognizedObjectObservation]) {
         
         let personUUIDs = predictions
-            .flatMap(\.labels)
-            .filter { $0.identifier == "person" }
+            .filter {
+                let label = $0.labels[0]
+                return label.identifier == "person" && label.confidence > 0.75
+            }
             .map(\.uuid.uuidString)
-        
+    
         if personUUIDs.isEmpty {
             videoWritter.saveFileWhenIdle()
         } else {
