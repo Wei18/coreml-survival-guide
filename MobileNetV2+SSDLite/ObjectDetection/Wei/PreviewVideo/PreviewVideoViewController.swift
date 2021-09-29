@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 import Vision
+import PhotosUI
+
 
 class PreviewVideoViewController: ZWLogViewController {
     
@@ -22,9 +24,18 @@ class PreviewVideoViewController: ZWLogViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpBoundingBoxViews()
+        setUpViews()
         setUpViewModel()
-        setUpPhotoLibrary()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        showPhotoLibrary()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        resizePreviewLayer()
     }
     
     // MARK: Functions
@@ -34,20 +45,43 @@ class PreviewVideoViewController: ZWLogViewController {
         viewModel.genColors()
     }
     
-    private func setUpBoundingBoxViews() {
+    private func setUpViews() {
+        videoPreview.layer.addSublayer(viewModel.videoReader.bufferDisplayLayer)
         boundingBoxViews = (0..<viewModel.maxBoundingBoxViews).map { _ in BoundingBoxView() }
         boundingBoxViews.forEach { box in box.addToLayer(self.videoPreview.layer) }
     }
     
-    private func setUpPhotoLibrary() {
-        #warning("todo")
-        // present photo library and return video as parameter into
-        //viewModel.setVideo()
+    private func showPhotoLibrary() {
+        var configuration = PHPickerConfiguration()
+        configuration.filter = .videos
+        configuration.selectionLimit = 1
+        let picker = PHPickerViewController(configuration: configuration)
+        
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+    
+    private func resizePreviewLayer() {
+        viewModel.videoReader.bufferDisplayLayer.frame = videoPreview.bounds
     }
     
 }
 
-extension PreviewVideoViewController: VideoViewModelDelegate {
+extension PreviewVideoViewController: VideoViewModelDelegate, PHPickerViewControllerDelegate {
+    
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        guard let itemProvider = results.first?.itemProvider else { return }
+        itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.mpeg4Movie.identifier) { [weak self] url, error in
+            if let error = error {
+                ZWLogger.report(error)
+            } else if let url = url {
+                self?.viewModel.setVideoUrl(url)
+            }
+            DispatchQueue.main.async {
+                picker.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
     
     func show(predictions: [VNRecognizedObjectObservation]) {
         for i in 0..<boundingBoxViews.count {

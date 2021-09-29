@@ -11,6 +11,7 @@ import UIKit
 import CoreMedia
 import CoreML
 import Vision
+import AVFoundation
 
 protocol VideoViewModelDelegate: AnyObject {
     func show(predictions: [VNRecognizedObjectObservation])
@@ -19,11 +20,9 @@ protocol VideoViewModelDelegate: AnyObject {
 class PreviewVideoViewModel {
     
     // MARK: Properties
-    
     weak var delegate: VideoViewModelDelegate?
-    
+    private(set) lazy var videoReader = VideoReader()
     private var currentBuffer: CVPixelBuffer?
-    
     private let coreMLModel = MobileNetV2_SSDLite()
     
     private lazy var visionModel: VNCoreMLModel = {
@@ -111,9 +110,19 @@ class PreviewVideoViewModel {
         }
     }
     
-    func setVideo() {
-        // play thte video and parsing as sampleBuffer
-        //viewModel.predict(sampleBuffer: sampleBuffer)
+    func setVideoUrl(_ url: URL) {
+        let asset = AVAsset(url: url)
+        videoReader.delegate = self
+        videoReader.read(asset: asset)
+        videoReader.repeatedlyDispalyBuffer()
+    }
+    
+}
+
+extension PreviewVideoViewModel: VideoReaderDelegate {
+    
+    func videoRead(_ reader: VideoReader, didReadVideoFrame sampleBuffer: CMSampleBuffer) {
+        predict(sampleBuffer: sampleBuffer)
     }
     
 }

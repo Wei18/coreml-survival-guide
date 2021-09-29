@@ -21,6 +21,7 @@
 		DB3324C0270444B5000A89FD /* LiveVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3324BF270444B5000A89FD /* LiveVideoViewController.swift */; };
 		DB3324C2270448B3000A89FD /* LiveVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3324C1270448B3000A89FD /* LiveVideoViewModel.swift */; };
 		DB3324C92704B29B000A89FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DB3324CB2704B29B000A89FD /* InfoPlist.strings */; };
+		DB3324CD2704BA43000A89FD /* VideoReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3324CC2704BA43000A89FD /* VideoReader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		DB3324BF270444B5000A89FD /* LiveVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoViewController.swift; sourceTree = "<group>"; };
 		DB3324C1270448B3000A89FD /* LiveVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoViewModel.swift; sourceTree = "<group>"; };
 		DB3324CA2704B29B000A89FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		DB3324CC2704BA43000A89FD /* VideoReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoReader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 			children = (
 				DB3324B92703FB67000A89FD /* PreviewVideoViewController.swift */,
 				DB3324BB270400D6000A89FD /* PreviewVideoViewModel.swift */,
+				DB3324CC2704BA43000A89FD /* VideoReader.swift */,
 			);
 			path = PreviewVideo;
 			sourceTree = "<group>";
@@ -191,6 +194,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB3324C2270448B3000A89FD /* LiveVideoViewModel.swift in Sources */,
+				DB3324CD2704BA43000A89FD /* VideoReader.swift in Sources */,
 				DB3324B42702B8CA000A89FD /* Logger.swift in Sources */,
 				7BCB413221C309B900BFC4D0 /* BoundingBoxView.swift in Sources */,
 				7BCB413921C55F9B00BFC4D0 /* MobileNetV2_SSDLite.mlmodel in Sources */,
@@ -357,6 +361,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DS7FNLNW4K;
 				INFOPLIST_FILE = ObjectDetection/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -377,6 +382,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DS7FNLNW4K;
 				INFOPLIST_FILE = ObjectDetection/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
