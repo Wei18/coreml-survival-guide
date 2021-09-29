@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+struct DebugError: Error {}
+
 class ZWLogger {
     static func log(
         _ items: @autoclosure (() -> [Any]) = [],
@@ -28,8 +30,7 @@ class ZWLogger {
         file: @autoclosure (() -> String) = #file,
         line: @autoclosure (() -> Int) = #line) {
             // Firebase Crashlytics
-            let text = e.localizedDescription
-            ZWLogger.log([text], file: file(), line: line())
+            ZWLogger.log([e.localizedDescription], file: file(), line: line())
     }
 }
 

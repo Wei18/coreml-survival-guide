@@ -127,6 +127,7 @@ class PreviewVideoViewModel {
 extension PreviewVideoViewModel: VideoReaderDelegate {
     
     func videoRead(_ reader: VideoReader, didReadVideoFrame sampleBuffer: CMSampleBuffer) {
+        ZWLogger.log()
         predict(sampleBuffer: sampleBuffer)
     }
     

@@ -79,7 +79,7 @@ class LiveVideoViewModel {
                 completion()
                 self.videoCapture.start()
             } else {
-                ZWLogger.report(NSError())
+                ZWLogger.report(DebugError())
             }
         }
     }

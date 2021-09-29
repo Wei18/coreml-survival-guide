@@ -19,7 +19,7 @@ class VideoWritter {
         lazy var fileUrl: URL? = {
             let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
             guard var fileUrl = path.first else {
-                ZWLogger.report(NSError())
+                ZWLogger.report(DebugError())
                 return nil
             }
             return fileUrl
@@ -57,13 +57,13 @@ class VideoWritter {
     private func startRecord(with filename: String, fileExtension: String = Config.fileExtension) {
         queue.async {
             guard var fileUrl = self.config.fileUrl else {
-                ZWLogger.report(NSError())
+                ZWLogger.report(DebugError())
                 return
             }
             fileUrl.appendPathComponent(filename + fileExtension)
             self.config.currentFilePath = fileUrl
             guard let assetWriter = try? AVAssetWriter(outputURL: fileUrl, fileType: .mp4) else {
-                ZWLogger.report(NSError())
+                ZWLogger.report(DebugError())
                 return
             }
             self.assetWriter = assetWriter
@@ -116,7 +116,7 @@ class VideoWritter {
     
 //    private func remove(with filename: String, fileExtension: String = Config.fileExtension) {
 //        guard var fileUrl = self.config.fileUrl else {
-//            ZWLogger.report(NSError())
+//            ZWLogger.report(DebugError())
 //            return
 //        }
 //        let name = filename + fileExtension

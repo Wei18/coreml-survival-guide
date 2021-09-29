@@ -24,8 +24,9 @@ class VideoReader {
     
     func read(asset: AVAsset) {
         queue.async {
+            ZWLogger.log()
             guard let assetReader = try? AVAssetReader(asset: asset) else {
-                ZWLogger.report(NSError())
+                ZWLogger.report(DebugError())
                 return
             }
             self.assetReader?.cancelReading()
@@ -38,7 +39,9 @@ class VideoReader {
             assetReader.startReading()
         }
     }
+    
     func repeatedlyDispalyBuffer() {
+        ZWLogger.log()
         bufferDisplayLayer.requestMediaDataWhenReady(on: self.queue) { [weak self] in
             guard let self = self else { return }
             if self.assetReader?.status == .reading, let buffer = self.output?.copyNextSampleBuffer() {
