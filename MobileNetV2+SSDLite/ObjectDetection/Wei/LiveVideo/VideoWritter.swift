@@ -29,7 +29,7 @@ class VideoWritter {
         /// The duration of no more person detected.
         var idleDuration: TimeInterval = 5
         /// The name is represented to the name.
-        var currentFileName: String?
+        var currentFilePath: URL?
         var atSourceTime: CMTime?
     }
     
@@ -61,6 +61,7 @@ class VideoWritter {
                 return
             }
             fileUrl.appendPathComponent(filename + fileExtension)
+            self.config.currentFilePath = fileUrl
             guard let assetWriter = try? AVAssetWriter(outputURL: fileUrl, fileType: .mp4) else {
                 ZWLogger.report(NSError())
                 return
@@ -85,8 +86,8 @@ class VideoWritter {
             self.assetWriter?.finishWriting { [weak self] in
                 guard let self = self else { return }
                 self.config.atSourceTime = nil
-                if let name = self.config.currentFileName {
-                    UISaveVideoAtPathToSavedPhotosAlbum(name, nil, nil, nil)
+                if let name = self.config.currentFilePath {
+                    UISaveVideoAtPathToSavedPhotosAlbum(name.path, nil, nil, nil)
                 }
             }
         }
@@ -99,12 +100,7 @@ class VideoWritter {
     func saveFileWhenDetected() {
         guard self.config.isRecording == false else { return }
         ZWLogger.log()
-        let name: String = {
-            let value = config.dateName
-            config.currentFileName = value
-            return value
-        }()
-        startRecord(with: name)
+        startRecord(with: config.dateName)
         activeTimer = Timer.scheduledTimer(withTimeInterval: config.activeDuration, repeats: false, block: { [weak self] _ in
             self?.stopRecord()
         })
@@ -118,16 +114,16 @@ class VideoWritter {
         #warning("todo")
     }
     
-    private func remove(with filename: String, fileExtension: String = Config.fileExtension) {
-        guard var fileUrl = self.config.fileUrl else {
-            ZWLogger.report(NSError())
-            return
-        }
-        let name = filename + fileExtension
-        ZWLogger.log([name])
-        fileUrl.appendPathComponent(name)
-        try? FileManager.default.removeItem(at: fileUrl)
-    }
+//    private func remove(with filename: String, fileExtension: String = Config.fileExtension) {
+//        guard var fileUrl = self.config.fileUrl else {
+//            ZWLogger.report(NSError())
+//            return
+//        }
+//        let name = filename + fileExtension
+//        ZWLogger.log([name])
+//        fileUrl.appendPathComponent(name)
+//        try? FileManager.default.removeItem(at: fileUrl)
+//    }
     
     func append(_ sampleBuffer: CMSampleBuffer) {
         queue.async {
