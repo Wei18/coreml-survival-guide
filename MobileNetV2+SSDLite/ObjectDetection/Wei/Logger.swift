@@ -27,7 +27,8 @@ class ZWLogger {
         _ e: Error,
         file: @autoclosure (() -> String) = #file,
         line: @autoclosure (() -> Int) = #line) {
-        /// Firebase Crashlytics
+            // Firebase Crashlytics
+            ZWLogger.log([e], file: file(), line: line())
     }
 }
 
